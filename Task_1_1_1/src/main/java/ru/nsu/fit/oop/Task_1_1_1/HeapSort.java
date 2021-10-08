@@ -1,6 +1,21 @@
 package ru.nsu.fit.oop.Task_1_1_1;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class HeapSort {
+
+    /**
+     * Function for swapping to elements in array
+     * @param array source array
+     * @param i index of the first element
+     * @param j index of the second element
+     */
+    private static void swap(int[] array, int i, int j) {
+        int temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
 
     /**
      * Function for converting array to binary heap
@@ -22,9 +37,7 @@ public class HeapSort {
                 largest = r;
 
             if (largest != x) {
-                int temp = array[x];
-                array[x] = array[largest];
-                array[largest] = temp;
+                swap(array, x, largest);
                 x = largest;
             } else {
                 break;
@@ -42,10 +55,7 @@ public class HeapSort {
         }
 
         for (int i = array.length - 1; i >= 0; i--) {
-            int temp = array[0];
-            array[0] = array[i];
-            array[i] = temp;
-
+            swap(array, 0, i);
             heapify(array, i, 0);
         }
     }
