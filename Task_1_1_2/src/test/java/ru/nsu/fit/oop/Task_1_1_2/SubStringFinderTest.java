@@ -1,70 +1,54 @@
 package ru.nsu.fit.oop.Task_1_1_2;
 
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.AssertArrayEquals.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SubStringFinderTest {
 
-    @Test
-    public void findSubStringTest1() {
-        String filePath = "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\1.in";
-        String subString = "пирог";
-        int expResult = 7;
-        int result = SubStringFinder.findSubString(filePath, subString);
-        assertEquals(expResult, result);
+    private static Stream<Arguments> provideTestsForFindSubStringTest() {
+        return Stream.of(
+                Arguments.of(
+                        "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\1.in",
+                        "violent",
+                        31
+                ),
+                Arguments.of(
+                        "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\2.in",
+                        "I give him a hard time.  Keeps him in check.",
+                        550
+                ),
+                Arguments.of(
+                        "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\2.in",
+                        "Top of the morning to you, Mrs. O'Neil.",
+                        27587
+                ),
+                Arguments.of(
+                        "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\3.in",
+                        "blablabla",
+                        0
+                ),
+                Arguments.of(
+                        "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\3.in",
+                        "blablablabla",
+                        -1
+                )
+        );
     }
 
-    @Test
-    public void findSubStringTest2() {
-        String filePath = "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\2.in";
-        String subString = "пирог";
-        int expResult = -1;
-        int result = SubStringFinder.findSubString(filePath, subString);
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void findSubStringTest3() {
-        String filePath = "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\3.in";
-        String subString = "цыган";
-        int expResult = 17;
-        int result = SubStringFinder.findSubString(filePath, subString);
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void findSubStringTest4() {
-        String filePath = "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\4.in";
-        String subString = "I give him a hard time.  Keeps him in check.";
-        int expResult = 550;
-        int result = SubStringFinder.findSubString(filePath, subString);
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void findSubStringTest5() {
-        String filePath = "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\4.in";
-        String subString = "Top of the morning to you, Mrs. O'Neil.";
-        int expResult = 27587;
-        int result = SubStringFinder.findSubString(filePath, subString);
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void findSubStringTest6() {
-        String filePath = "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\5.in";
-        String subString = "blablabla";
-        int expResult = 0;
-        int result = SubStringFinder.findSubString(filePath, subString);
-        assertEquals(expResult, result);
-    }
-
-    @Test
-    public void findSubStringTest7() {
-        String filePath = "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\5.in";
-        String subString = "blablablabla";
-        int expResult = -1;
-        int result = SubStringFinder.findSubString(filePath, subString);
-        assertEquals(expResult, result);
+    @ParameterizedTest
+    @MethodSource("provideTestsForFindSubStringTest")
+    public void findSubStringTest(String filePath, String subString, int expResult) {
+        ArrayList<Integer> resultList = SubStringFinder.findSubString(filePath, subString);
+        int[] result = new int[resultList.size()];
+        resultList.toArray(result);
+        assertArrayEquals(result, expResult);
     }
 }
