@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.AssertArrayEquals.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SubStringFinderTest {
@@ -18,37 +17,35 @@ class SubStringFinderTest {
                 Arguments.of(
                         "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\1.in",
                         "violent",
-                        31
+                        List.of(31)
                 ),
                 Arguments.of(
                         "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\2.in",
                         "I give him a hard time.  Keeps him in check.",
-                        550
+                        List.of(550)
                 ),
                 Arguments.of(
                         "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\2.in",
                         "Top of the morning to you, Mrs. O'Neil.",
-                        27587
+                        List.of(27587)
                 ),
                 Arguments.of(
                         "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\3.in",
                         "blablabla",
-                        0
+                        List.of(0)
                 ),
                 Arguments.of(
                         "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\3.in",
                         "blablablabla",
-                        -1
+                        new ArrayList<Integer>()
                 )
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideTestsForFindSubStringTest")
-    public void findSubStringTest(String filePath, String subString, int expResult) {
-        ArrayList<Integer> resultList = SubStringFinder.findSubString(filePath, subString);
-        int[] result = new int[resultList.size()];
-        resultList.toArray(result);
-        assertArrayEquals(result, expResult);
+    public void findSubStringTest(String filePath, String subString, List<Integer> expResult) {
+        List<Integer> resultList = SubStringFinder.findSubString(filePath, subString);
+        assertEquals(expResult, resultList);
     }
 }

@@ -8,54 +8,87 @@ import java.util.List;
 
 public class SubStringFinder {
 
-    private static int findSubStringInBuffer(String buffer, String subString, int offset) {
-        for (int i = 0; i < offset + 1; i++) {
-            if (subString.equals(buffer.substring(i, i + subString.length()))) {
-                return i;
+    /**
+     * Prefix-function for Knuth-Morris-Pratt algorithm
+     * @param buffer buffer to calculate prefix-function
+     * @return array of calculated prefix-functions for every position
+     */
+    private static int[] prefixFunction(String buffer) {
+        int[] prefixFuncResult = new int[buffer.length()];
+        prefixFuncResult[0] = 0;
+        for (int i = 1; i < buffer.length(); i++) {
+            int k = prefixFuncResult[i - 1];
+            while ((k > 0) && (buffer.charAt(i) != buffer.charAt(k))) {
+                k = prefixFuncResult[k - 1];
             }
+            if (buffer.charAt(i) == buffer.charAt(k)) {
+                k++;
+            }
+            prefixFuncResult[i] = k;
         }
 
-        return -1;
+        return prefixFuncResult;
     }
 
     /**
-     * Function for finding substring in file
+     * Function for finding all indexes of first symbol of substring in the buffer.
+     * Using Knuth-Morris-Pratt algorithm
+     * @param buffer buffer to search for substring
+     * @param subString string to find in the buffer
+     * @param shift position of the first symbol of buffer in relation to the file
+     * @return list of indexes of first symbol of found substring in the file
+     */
+    private static List<Integer> findSubStringInBuffer(String buffer, String subString, int shift) {
+        List<Integer> resultList = new ArrayList<>();
+        int[] prefixFuncResult = prefixFunction(subString + "#" + buffer);
+        for (int i = 0; i < buffer.length(); i++) {
+            if (prefixFuncResult[subString.length() + i + 1] == subString.length()) {
+                resultList.add(i - subString.length() + 1 + shift);
+            }
+        }
+
+        return resultList;
+    }
+
+    /**
+     * Function for finding all substring in file
      * @param filePath filepath for file to read from
      * @param subString string to find in file
-     * @return index of firs
+     * @return list of indexes of first symbol of found substrings in the file
      */
-    public static ArrayList<Integer> findSubString(String filePath, String subString) {
+    public static List<Integer> findSubString(String filePath, String subString) {
         List<Integer> resultList = new ArrayList<>();
         try (
                 FileReader fileReader = new FileReader(filePath);
-                BufferedReader bufferedReader = new BufferedReader(fileReader, subString.length())
+                BufferedReader bufferedReader = new BufferedReader(fileReader)
         ) {
-            StringBuilder buffer = new StringBuilder();
-            char[] charBuffer = new char[subString.length()];
-            int result = bufferedReader.read(charBuffer, 0, subString.length());
-            buffer.append(new String(charBuffer));
+            int bufferSize = 100 * subString.length();
+            char[] charBuffer = new char[bufferSize];
+            int curBufferSize = bufferedReader.read(charBuffer, 0, bufferSize);
+            int bufferCount = 0;
+            String shift = "";
 
-            if (result < subString.length()) return resultList;
-            if (buffer.toString().equals(subString)) {
-                resultList.add(0);
+            if (curBufferSize < subString.length()) {
+                return resultList;
+            } else if (curBufferSize != bufferSize) {
+                String buffer = String.valueOf(charBuffer);
+                List<Integer> subStringInBuffer = findSubStringInBuffer(buffer, subString, 0);
+                resultList.addAll(subStringInBuffer);
+                return resultList;
             }
 
-            int index = 0;
-            while (true) {
-                result = bufferedReader.read(charBuffer, 0, subString.length());
+            do {
+                if (bufferCount != 0) curBufferSize = bufferedReader.read(charBuffer, 0, bufferSize);
+                String buffer = shift + String.valueOf(charBuffer);
+                List<Integer> subStringInBuffer = findSubStringInBuffer(
+                        buffer,
+                        subString,
+                        bufferCount == 0 ? 0 : bufferSize - subString.length() + (bufferCount - 1) * bufferSize);
+                resultList.addAll(subStringInBuffer);
+                shift = buffer.substring(shift.length() + curBufferSize - subString.length(), shift.length() + curBufferSize);
+                bufferCount++;
+            } while (charBuffer.length == curBufferSize);
 
-                if (result == -1) break;
-
-                buffer.append(new String(charBuffer));
-
-                int offset = findSubStringInBuffer(buffer.toString(), subString, result);
-                if (offset != -1) {
-                    resultList.add(index * subString.length() + offset);
-                }
-
-                buffer.delete(0, subString.length());
-                index++;
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }
