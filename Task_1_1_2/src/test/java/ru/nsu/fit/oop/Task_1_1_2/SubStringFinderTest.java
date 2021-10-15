@@ -15,27 +15,27 @@ class SubStringFinderTest {
     private static Stream<Arguments> provideTestsForFindSubStringTest() {
         return Stream.of(
                 Arguments.of(
-                        "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\1.in",
+                        "./src/test/resources/1.in",
                         "violent",
                         List.of(31)
                 ),
                 Arguments.of(
-                        "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\2.in",
+                        "./src/test/resources/2.in",
                         "I give him a hard time.  Keeps him in check.",
                         List.of(550)
                 ),
                 Arguments.of(
-                        "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\2.in",
+                        "./src/test/resources/2.in",
                         "Top of the morning to you, Mrs. O'Neil.",
                         List.of(27587)
                 ),
                 Arguments.of(
-                        "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\3.in",
+                        "./src/test/resources/3.in",
                         "blablabla",
                         List.of(0)
                 ),
                 Arguments.of(
-                        "E:\\projects\\OOP\\Task_1_1_2\\src\\test\\resources\\3.in",
+                        "./src/test/resources/3.in",
                         "blablablabla",
                         new ArrayList<Integer>()
                 )
