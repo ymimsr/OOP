@@ -7,7 +7,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class MyStackIntegerTest {
 
@@ -35,7 +36,7 @@ public class MyStackIntegerTest {
                         new int[]{5, 4}
                 ),
                 Arguments.of(
-                        new MyStack<>(List.of(1, 2 ,3)),
+                        new MyStack<>(List.of(1, 2, 3)),
                         3,
                         new MyStack<Integer>(),
                         new int[]{3, 2, 1}
