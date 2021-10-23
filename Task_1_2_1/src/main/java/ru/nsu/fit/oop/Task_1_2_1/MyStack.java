@@ -1,82 +1,190 @@
 package ru.nsu.fit.oop.Task_1_2_1;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collection;
-import java.util.Vector;
+import java.util.Iterator;
 
-public class MyStack<E> extends Vector<E> {
+public class MyStack<E> implements Collection<E> {
 
-    public MyStack(int initialCapacity, int capacityIncrement) {
-        super(initialCapacity, capacityIncrement);
+    private E[] stack;
+    private int currentSize;
+    @SuppressWarnings("unchecked")
+    public MyStack(Class<E> elemClass, int initialCapacity) {
+        stack = (E[]) Array.newInstance(elemClass, initialCapacity);
+        currentSize = 0;
     }
 
-    public MyStack(int initialCapacity) {
-        super(initialCapacity, 0);
+    public MyStack(Class<E> elemClass) {
+        this(elemClass, 1000);
     }
 
-    public MyStack() {
-        super();
+    public MyStack(Class<E> elemClass, Collection<? extends E> collection) {
+        this(elemClass);
+        addAll(collection);
     }
 
-    public MyStack(Collection<? extends E> c) {
-        super(c);
+    public void push(E elem) {
+        stack[currentSize++] = elem;
     }
 
-    /**
-     * Pushes element to the top of the stack
-     *
-     * @param elem - element to be pushed
-     */
-    public synchronized void push(E elem) {
-        addElement(elem);
+    public E pop() {
+        E poppedElem = stack[--currentSize];
+        stack[currentSize] = null;
+
+        return poppedElem;
     }
 
-    /**
-     * Pops element from the top of the stack
-     *
-     * @return top element in the stack
-     */
-    public synchronized E pop() {
-        E elem = elementAt(elementCount - 1);
-        removeElementAt(elementCount - 1);
-
-        return elem;
-    }
-
-    /**
-     * Pushes all elements from given stack to this stack
-     *
-     * @param stack to be pushed on top of this stack
-     */
-    public synchronized void pushStack(MyStack<? extends E> stack) {
-        while (!stack.isEmpty()) {
-            this.push(stack.pop());
+    public void pushStack(MyStack<E> pushStack) {
+        for (E pushElem : pushStack) {
+            push(pushElem);
         }
     }
 
-    /**
-     * Pops elements from this stack and returns them as a stack
-     *
-     * @param elements how much elements to be popped
-     * @return stack of popped elements
-     */
-    public synchronized MyStack<E> popStack(int elements) {
-        if (elements > elementCount)
-            throw new ArrayIndexOutOfBoundsException(elements + " >= " + elementCount);
+    public MyStack<E> popStack(Class<E> elemClass, int popElemCount) {
+        if (popElemCount > currentSize) throw new ArrayIndexOutOfBoundsException(popElemCount + " > " + currentSize);
 
-        MyStack<E> stack = new MyStack<>();
-        for (int i = 0; i < elements; i++) {
-            stack.push(this.pop());
+        MyStack<E> popStack = new MyStack<>(elemClass);
+        for (int i = currentSize - popElemCount; i < currentSize; i++) {
+            popStack.push(stack[i]);
+            stack[i] = null;
         }
-
-        return stack;
+        currentSize -= popElemCount;
+        return popStack;
     }
 
-    /**
-     * Returns the current capacity of a stack
-     *
-     * @return the current capacity of a stack
-     */
-    public synchronized int count() {
-        return elementCount;
+    public int count() {
+        return size();
+    }
+
+    private void grow() {
+        stack = Arrays.copyOf(stack, stack.length * 2);
+    }
+
+    @Override
+    public int size() {
+        return currentSize;
+    }
+
+    @Override
+    public boolean isEmpty() {
+        return currentSize == 0;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean contains(Object o) {
+        E obj = (E) o;
+        for (E elem : stack) {
+            if (obj.equals(elem)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public Iterator<E> iterator() {
+        return new Iterator<>() {
+            private int listIndex = 0;
+
+            @Override
+            public boolean hasNext() {
+                return listIndex != currentSize;
+            }
+
+            @Override
+            public E next() {
+                return stack[listIndex++];
+            }
+        };
+    }
+
+    @Override
+    public Object[] toArray() {
+        return Arrays.copyOf(stack, currentSize);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T[] toArray(T[] a) {
+        if (a.length < currentSize)
+            return (T[]) Arrays.copyOf(stack, currentSize, a.getClass());
+
+        System.arraycopy(stack, 0, a, 0, currentSize);
+
+        if (a.length > currentSize)
+            stack[currentSize] = null;
+
+        return a;
+    }
+
+    @Override
+    public boolean add(E e) {
+        if (currentSize == stack.length)
+            grow();
+        stack[currentSize++] = e;
+
+        return true;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public boolean remove(Object o) {
+        if (o == null) {
+            return false;
+        }
+
+        E obj = (E) o;
+        for (int i = 0; i < currentSize; i++) {
+            if (stack[i].equals(obj)) {
+                System.arraycopy(stack, i + 1, stack, i, currentSize - i - 1);
+                stack[currentSize--] = null;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        for (Object elem : c) {
+            if (!contains(elem)) return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends E> c) {
+        for (E elem : c) {
+            add(elem);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        boolean isChanged = false;
+        for (Object elem : c) {
+            if (remove(elem)) isChanged = true;
+        }
+        return isChanged;
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        boolean isChanged = false;
+        for (E elem : stack) {
+            if (!c.contains(elem))
+                if (remove(elem)) isChanged = true;
+        }
+        return isChanged;
+    }
+
+    @Override
+    public void clear() {
+        for (int i = 0; i < currentSize; i++) {
+            stack[i] = null;
+        }
     }
 }

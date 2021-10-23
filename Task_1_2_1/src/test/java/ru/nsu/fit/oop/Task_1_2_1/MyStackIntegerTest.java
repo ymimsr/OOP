@@ -9,19 +9,20 @@ import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MyStackIntegerTest {
 
     private static Stream<Arguments> provideTestsForPush() {
         return Stream.of(
                 Arguments.of(
-                        new MyStack<Integer>(),
-                        new MyStack<>(List.of(1, 4, 5, 21, 453)),
+                        new MyStack<>(Integer.class),
+                        new MyStack<>(Integer.class, List.of(1, 4, 5, 21, 453)),
                         new int[]{1, 4, 5, 21, 453}
                 ),
                 Arguments.of(
-                        new MyStack<>(List.of(1, 2, 3)),
-                        new MyStack<>(List.of(1, 2, 3, 4, 5)),
+                        new MyStack<>(Integer.class, List.of(1, 2, 3)),
+                        new MyStack<>(Integer.class, List.of(1, 2, 3, 4, 5)),
                         new int[]{4, 5}
                 )
         );
@@ -30,15 +31,15 @@ public class MyStackIntegerTest {
     private static Stream<Arguments> provideTestsForPop() {
         return Stream.of(
                 Arguments.of(
-                        new MyStack<>(List.of(1, 2, 3, 4, 5)),
+                        new MyStack<>(Integer.class, List.of(1, 2, 3, 4, 5)),
                         2,
-                        new MyStack<>(List.of(1, 2, 3)),
+                        new MyStack<>(Integer.class, List.of(1, 2, 3)),
                         new int[]{5, 4}
                 ),
                 Arguments.of(
-                        new MyStack<>(List.of(1, 2, 3)),
+                        new MyStack<>(Integer.class, List.of(1, 2, 3)),
                         3,
-                        new MyStack<Integer>(),
+                        new MyStack<>(Integer.class),
                         new int[]{3, 2, 1}
                 )
         );
@@ -47,24 +48,24 @@ public class MyStackIntegerTest {
     private static Stream<Arguments> provideTestsForPushStack() {
         return Stream.of(
                 Arguments.of(
-                        new MyStack<Integer>(),
-                        new MyStack<Integer>(),
-                        new MyStack<Integer>()
+                        new MyStack<>(Integer.class),
+                        new MyStack<>(Integer.class),
+                        new MyStack<>(Integer.class)
                 ),
                 Arguments.of(
-                        new MyStack<>(List.of(1, 2, 3)),
-                        new MyStack<Integer>(),
-                        new MyStack<>(List.of(1, 2, 3))
+                        new MyStack<>(Integer.class, List.of(1, 2, 3)),
+                        new MyStack<>(Integer.class),
+                        new MyStack<>(Integer.class, List.of(1, 2, 3))
                 ),
                 Arguments.of(
-                        new MyStack<Integer>(),
-                        new MyStack<>(List.of(1, 2, 3)),
-                        new MyStack<>(List.of(3, 2, 1))
+                        new MyStack<>(Integer.class),
+                        new MyStack<>(Integer.class, List.of(1, 2, 3)),
+                        new MyStack<>(Integer.class, List.of(1, 2, 3))
                 ),
                 Arguments.of(
-                        new MyStack<>(List.of(1, 2, 3)),
-                        new MyStack<>(List.of(4, 5, 6)),
-                        new MyStack<>(List.of(1, 2, 3, 6, 5, 4))
+                        new MyStack<>(Integer.class, List.of(1, 2, 3)),
+                        new MyStack<>(Integer.class, List.of(4, 5, 6)),
+                        new MyStack<>(Integer.class, List.of(1, 2, 3, 4, 5, 6))
                 )
         );
     }
@@ -72,16 +73,16 @@ public class MyStackIntegerTest {
     private static Stream<Arguments> provideTestsForPopStack() {
         return Stream.of(
                 Arguments.of(
-                        new MyStack<>(List.of(1, 2)),
+                        new MyStack<>(Integer.class, List.of(1, 2)),
                         2,
-                        new MyStack<Integer>(),
-                        new MyStack<>(List.of(2, 1))
+                        new MyStack<>(Integer.class),
+                        new MyStack<>(Integer.class, List.of(1, 2))
                 ),
                 Arguments.of(
-                        new MyStack<>(List.of(1, 2, 3, 4)),
+                        new MyStack<>(Integer.class, List.of(1, 2, 3, 4)),
                         2,
-                        new MyStack<>(List.of(1, 2)),
-                        new MyStack<>(List.of(4, 3))
+                        new MyStack<>(Integer.class, List.of(1, 2)),
+                        new MyStack<>(Integer.class, List.of(3, 4))
                 )
         );
     }
@@ -89,11 +90,11 @@ public class MyStackIntegerTest {
     private static Stream<Arguments> provideTestsForCount() {
         return Stream.of(
                 Arguments.of(
-                        new MyStack<Integer>(),
+                        new MyStack<>(Integer.class),
                         0
                 ),
                 Arguments.of(
-                        new MyStack<>(List.of(1, 2, 4)),
+                        new MyStack<>(Integer.class, List.of(1, 2, 4)),
                         3
                 )
         );
@@ -105,7 +106,7 @@ public class MyStackIntegerTest {
         for (int elem : elems) {
             stack.push(elem);
         }
-        assertEquals(expStack, stack);
+        assertIterableEquals(expStack, stack);
     }
 
     @ParameterizedTest
@@ -116,7 +117,7 @@ public class MyStackIntegerTest {
             popElems[i] = stack.pop();
         }
 
-        assertEquals(expStack, stack);
+        assertIterableEquals(expStack, stack);
         assertArrayEquals(expPopElems, popElems);
     }
 
@@ -125,16 +126,16 @@ public class MyStackIntegerTest {
     public void pushStackTest(MyStack<Integer> toStack, MyStack<Integer> fromStack, MyStack<Integer> expStack) {
         toStack.pushStack(fromStack);
 
-        assertEquals(expStack, toStack);
+        assertIterableEquals(expStack, toStack);
     }
 
     @ParameterizedTest
     @MethodSource("provideTestsForPopStack")
     public void popStackTest(MyStack<Integer> stack, int popCount, MyStack<Integer> expStack, MyStack<Integer> expPopElems) {
-        MyStack<Integer> popElems = stack.popStack(popCount);
+        MyStack<Integer> popElems = stack.popStack(Integer.class, popCount);
 
-        assertEquals(expStack, stack);
-        assertEquals(expPopElems, popElems);
+        assertIterableEquals(expStack, stack);
+        assertIterableEquals(expPopElems, popElems);
     }
 
     @ParameterizedTest
