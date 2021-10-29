@@ -140,7 +140,7 @@ public class MyStackIntegerTest {
 
     @ParameterizedTest
     @MethodSource("provideTestsForCount")
-    public void countTest(MyStack<Integer> stack, int expCount) {
-        assertEquals(expCount, stack.count());
+    public void sizeTest(MyStack<Integer> stack, int expCount) {
+        assertEquals(expCount, stack.size());
     }
 }

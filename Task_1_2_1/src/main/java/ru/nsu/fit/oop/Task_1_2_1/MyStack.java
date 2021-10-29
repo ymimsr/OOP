@@ -9,6 +9,7 @@ public class MyStack<E> implements Collection<E> {
 
     private E[] stack;
     private int currentSize;
+
     @SuppressWarnings("unchecked")
     public MyStack(Class<E> elemClass, int initialCapacity) {
         stack = (E[]) Array.newInstance(elemClass, initialCapacity);
@@ -29,6 +30,8 @@ public class MyStack<E> implements Collection<E> {
     }
 
     public E pop() {
+        if (isEmpty()) throw new IndexOutOfBoundsException("Stack is empty");
+
         E poppedElem = stack[--currentSize];
         stack[currentSize] = null;
 
@@ -42,7 +45,7 @@ public class MyStack<E> implements Collection<E> {
     }
 
     public MyStack<E> popStack(Class<E> elemClass, int popElemCount) {
-        if (popElemCount > currentSize) throw new ArrayIndexOutOfBoundsException(popElemCount + " > " + currentSize);
+        if (popElemCount > currentSize) throw new IndexOutOfBoundsException(popElemCount + " > " + currentSize);
 
         MyStack<E> popStack = new MyStack<>(elemClass);
         for (int i = currentSize - popElemCount; i < currentSize; i++) {
@@ -51,10 +54,6 @@ public class MyStack<E> implements Collection<E> {
         }
         currentSize -= popElemCount;
         return popStack;
-    }
-
-    public int count() {
-        return size();
     }
 
     private void grow() {
@@ -186,5 +185,6 @@ public class MyStack<E> implements Collection<E> {
         for (int i = 0; i < currentSize; i++) {
             stack[i] = null;
         }
+        currentSize = 0;
     }
 }
