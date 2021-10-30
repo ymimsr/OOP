@@ -1,6 +1,6 @@
 package ru.nsu.fit.oop.Task_1_3_2;
 
-import java.util.Calendar;
+import java.time.LocalDate;
 
 public class Course {
 
@@ -9,7 +9,7 @@ public class Course {
     private final CertificationType certificationType;
     private final Teacher teacher;
     private final Semester semester;
-    private final Calendar passDate;
+    private final LocalDate passDate;
 
     // if certificationType is TEST then grade is 1 (course is passed) or 0 (course is failed)
     // otherwise grade is 2, 3, 4, or 5
@@ -20,7 +20,7 @@ public class Course {
             Expertise expertise,
             CertificationType certificationType,
             Teacher teacher, Semester semester,
-            Calendar passDate,
+            LocalDate passDate,
             int grade
     ) {
         this.title = title;
@@ -84,24 +84,14 @@ public class Course {
 
     public enum Semester {
 
-        FIRST_SEMESTER(1),
-        SECOND_SEMESTER(2),
-        THIRD_SEMESTER(3),
-        FOURTH_SEMESTER(4),
-        FIFTH_SEMESTER(5),
-        SIXTH_SEMESTER(6),
-        SEVENTH_SEMESTER(7),
-        EIGHT_SEMESTER(8);
-
-        private final int semesterNumber;
-
-        Semester(int semesterNumber) {
-            this.semesterNumber = semesterNumber;
-        }
-
-        public int getSemesterNumber() {
-            return semesterNumber;
-        }
+        FIRST_SEMESTER,
+        SECOND_SEMESTER,
+        THIRD_SEMESTER,
+        FOURTH_SEMESTER,
+        FIFTH_SEMESTER,
+        SIXTH_SEMESTER,
+        SEVENTH_SEMESTER,
+        EIGHT_SEMESTER;
 
         public Semester prevSemester() {
             return switch (this) {

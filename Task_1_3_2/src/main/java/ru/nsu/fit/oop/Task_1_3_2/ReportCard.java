@@ -1,6 +1,8 @@
 package ru.nsu.fit.oop.Task_1_3_2;
 
 import java.util.List;
+import java.util.OptionalDouble;
+import java.util.stream.Collectors;
 
 public class ReportCard {
 
@@ -13,16 +15,14 @@ public class ReportCard {
      * @return average grade
      */
     public double averageGrade() {
-        int grades = 0;
-        int count = 0;
-        for (Course course : courses) {
-            if (course.isGraded()) {
-                grades += course.getGrade();
-                count++;
-            }
-        }
+        OptionalDouble avgGrade = courses.stream()
+                .filter(Course::isGraded)
+                .mapToInt(Course::getGrade)
+                .average();
 
-        return 1.0 * grades / count;
+        if (avgGrade.isEmpty()) throw new NullPointerException();
+
+        return avgGrade.getAsDouble();
     }
 
     /**
@@ -32,16 +32,14 @@ public class ReportCard {
      * @return average grade for given semester
      */
     public double averageGrade(Course.Semester semester) {
-        int grades = 0;
-        int count = 0;
-        for (Course course : courses) {
-            if (course.isGraded() && course.getSemester() == semester) {
-                grades += course.getGrade();
-                count++;
-            }
-        }
+        OptionalDouble avgGrade = courses.stream()
+                .filter(course -> course.isGraded() && course.getSemester() == semester)
+                .mapToInt(Course::getGrade)
+                .average();
 
-        return 1.0 * grades / count;
+        if (avgGrade.isEmpty()) throw new NullPointerException();
+
+        return avgGrade.getAsDouble();
     }
 
     /**
@@ -50,15 +48,13 @@ public class ReportCard {
      * @return boolean value
      */
     public boolean isHonorsDegreeAvailable() {
-        for (Course course : courses) {
-            if (course.isGraded()) {
-                if (course.getGrade() != 5) return false;
-            } else {
-                if (course.getGrade() != 1) return false;
-            }
-        }
-
-        return true;
+        return courses.stream()
+                .collect(Collectors.groupingBy(Course::isGraded, Collectors.averagingInt(Course::getGrade)))
+                .entrySet().stream()
+                .allMatch(average -> average.getKey() ? average.getValue() >= 4.75 : average.getValue() == 1)
+                &&
+                courses.stream().filter(Course::isGraded)
+                        .allMatch(course -> course.getGrade() >= 4);
     }
 
     /**
@@ -70,18 +66,11 @@ public class ReportCard {
     public boolean isGettingIncreasedScholarship(Course.Semester semester) {
         if (semester == Course.Semester.FIRST_SEMESTER) return false;
 
-        for (Course course : courses) {
-            if (course.getSemester() == semester ||
-                    course.getSemester() == semester.prevSemester()) {
-                if (course.isGraded()) {
-                    if (course.getGrade() != 5) return false;
-                } else {
-                    if (course.getGrade() != 1) return false;
-                }
-            }
-        }
-
-        return true;
+        return courses.stream()
+                .filter(course -> course.getSemester() == semester || course.getSemester() == semester.prevSemester())
+                .collect(Collectors.groupingBy(Course::isGraded, Collectors.averagingInt(Course::getGrade)))
+                .entrySet().stream()
+                .allMatch(average -> average.getKey() ? average.getValue() == 5 : average.getValue() == 1);
     }
 
     public Student getStudent() {
