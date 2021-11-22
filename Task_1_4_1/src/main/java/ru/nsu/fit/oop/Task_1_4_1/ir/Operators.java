@@ -1,5 +1,7 @@
 package ru.nsu.fit.oop.Task_1_4_1.ir;
 
+import ru.nsu.fit.oop.Task_1_4_1.ir.exceptions.IllegalOperationException;
+
 public enum Operators {
 
     ADD,  // +
@@ -13,29 +15,17 @@ public enum Operators {
     SQRT; // square root
 
     public static Operators getOperator(String sValue) {
-        switch (sValue) {
-            case "+" :
-                return ADD;
-            case "-" :
-                return SUB;
-            case "*" :
-                return MUL;
-            case "/" :
-                return DIV;
-            case "sin" :
-                return SIN;
-            case "cos" :
-                return COS;
-            case "log" :
-                return LOG;
-            case "pow" :
-                return POW;
-            case "sqrt" :
-                return SQRT;
-            default:
-                assert false; // invalid operation
-        }
-
-        return null;
+        return switch (sValue) {
+            case "+" -> ADD;
+            case "-" -> SUB;
+            case "*" -> MUL;
+            case "/" -> DIV;
+            case "sin" -> SIN;
+            case "cos" -> COS;
+            case "log" -> LOG;
+            case "pow" -> POW;
+            case "sqrt" -> SQRT;
+            default -> throw new IllegalOperationException();
+        };
     }
 }

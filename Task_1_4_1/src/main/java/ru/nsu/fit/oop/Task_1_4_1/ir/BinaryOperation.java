@@ -1,5 +1,8 @@
 package ru.nsu.fit.oop.Task_1_4_1.ir;
 
+import org.apache.commons.math3.complex.Complex;
+import ru.nsu.fit.oop.Task_1_4_1.ir.exceptions.IllegalOperationException;
+
 public class BinaryOperation extends Expression {
 
     public final Token.OperatorToken operatorToken;
@@ -13,22 +16,15 @@ public class BinaryOperation extends Expression {
     }
 
     @Override
-    public double calc() {
-        switch (operatorToken.operator) {
-            case ADD:
-                return left.calc() + right.calc();
-            case SUB:
-                return left.calc() - right.calc();
-            case MUL:
-                return left.calc() * right.calc();
-            case DIV:
-                return left.calc() / right.calc();
-            case POW:
-                return Math.pow(left.calc(), right.calc());
-            default:
-                assert false;
-                return 0; // non-binary operation
-        }
+    public Complex calc() {
+        return switch (operatorToken.operator) {
+            case ADD -> left.calc().add(right.calc());
+            case SUB -> left.calc().subtract(right.calc());
+            case MUL -> left.calc().multiply(right.calc());
+            case DIV -> left.calc().divide(right.calc());
+            case POW -> left.calc().pow(right.calc());
+            default -> throw new IllegalOperationException();
+        };
     }
 
 }

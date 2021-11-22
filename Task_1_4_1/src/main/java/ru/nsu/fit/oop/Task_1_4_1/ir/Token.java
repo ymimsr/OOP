@@ -1,17 +1,15 @@
 package ru.nsu.fit.oop.Task_1_4_1.ir;
 
+import org.apache.commons.math3.complex.Complex;
+import ru.nsu.fit.oop.Task_1_4_1.ir.exceptions.IllegalTokenException;
+
 public abstract class Token {
 
     public static Token make(Kind kind, Object value) {
-        switch (kind) {
-            case OPERAND:
-                return new OperandToken((Double) value);
-            case OPERATION:
-                return new OperatorToken((Operators) value);
-            default:
-                assert false;
-                return null;
-        }
+        return switch (kind) {
+            case OPERAND -> new OperandToken((Complex) value);
+            case OPERATION -> new OperatorToken((Operators) value);
+        };
     }
 
     public enum Kind {
@@ -38,9 +36,9 @@ public abstract class Token {
 
     public static class OperandToken extends Token {
 
-        public final double value;
+        public final Complex value;
 
-        public OperandToken(double value) {
+        public OperandToken(Complex value) {
             this.value = value;
         }
 

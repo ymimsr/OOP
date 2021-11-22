@@ -1,26 +1,17 @@
 package ru.nsu.fit.oop.Task_1_4_1;
 
-import java.util.Scanner;
+import org.apache.commons.math3.complex.Complex;
 
 public class CalculatorMain {
 
-    private final Lexer lexer;
-    private final Calculator calculator;
+    private static final Calculator calculator = new Calculator();
+    private static final Lexer lexer = new Lexer();
 
-    public CalculatorMain() {
-        this.lexer = new Lexer();
-        this.calculator = new Calculator();
+    public static Complex start(String input) {
+        return calculator.calculate(lexer.tokenize(input.split(" ")));
     }
 
-    public void startCalculator() {
-        System.out.print("Write an expression in prefix notation: ");
-        double answer = calculator.calculate(lexer.tokenize());
-        System.out.println("Answer is " + answer);
+    public static Complex start() {
+        return calculator.calculate(lexer.tokenize());
     }
-
-    public static void main(String[] args) {
-        CalculatorMain calculatorMain = new CalculatorMain();
-        calculatorMain.startCalculator();
-    }
-
 }

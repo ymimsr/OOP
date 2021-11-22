@@ -1,12 +1,10 @@
 package ru.nsu.fit.oop.Task_1_4_1;
 
+import org.apache.commons.math3.complex.Complex;
 import ru.nsu.fit.oop.Task_1_4_1.ir.*;
+import ru.nsu.fit.oop.Task_1_4_1.ir.exceptions.IllegalTokenException;
 
 public class Calculator {
-    // sin + - 1 2 1
-    // sin ((1 - 2) + 1) = sin 0 = 0
-    // Algorithm for prefix expressions
-    // 1. If it is an operator the
 
     private int curIndex = 0;
 
@@ -34,12 +32,11 @@ public class Calculator {
                     }
                 }
             default:
-                assert false;
-                return null;
+                throw new IllegalTokenException();
         }
     }
 
-    public double calculate(Token[] tokens) {
+    public Complex calculate(Token[] tokens) {
         curIndex = 0;
 
         Expression expression = getExpression(tokens);

@@ -1,7 +1,9 @@
 package ru.nsu.fit.oop.Task_1_4_1.ir;
 
+import org.apache.commons.math3.complex.Complex;
 import ru.nsu.fit.oop.Task_1_4_1.ir.Expression;
 import ru.nsu.fit.oop.Task_1_4_1.ir.Token;
+import ru.nsu.fit.oop.Task_1_4_1.ir.exceptions.IllegalOperationException;
 
 public class UnaryOperation extends Expression {
 
@@ -14,19 +16,13 @@ public class UnaryOperation extends Expression {
     }
 
     @Override
-    public double calc() {
-        switch (operatorToken.operator) {
-            case SIN:
-                return Math.sin(expression.calc());
-            case COS:
-                return Math.cos(expression.calc());
-            case LOG:
-                return Math.log(expression.calc());
-            case SQRT:
-                return Math.sqrt(expression.calc());
-            default:
-                assert false;
-                return 0;
-        }
+    public Complex calc() {
+        return switch (operatorToken.operator) {
+            case SIN -> expression.calc().sin();
+            case COS -> expression.calc().cos();
+            case LOG -> expression.calc().log();
+            case SQRT -> expression.calc().sqrt();
+            default -> throw new IllegalOperationException();
+        };
     }
 }
