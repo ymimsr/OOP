@@ -11,10 +11,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.TimeZone;
 
 public class NotebookSerialization {
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    static {
+        objectMapper.setTimeZone(TimeZone.getDefault());
+    }
 
     public static void serialize(Notebook notebook) {
         List<Notebook.Note> notes = notebook.getNotes();

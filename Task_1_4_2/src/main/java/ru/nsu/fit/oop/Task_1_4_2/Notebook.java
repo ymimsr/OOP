@@ -48,8 +48,8 @@ public class Notebook {
         notes.stream()
                 .filter(
                         note ->
-                                note.date.compareTo(lowerBound) > 0
-                                        && note.date.compareTo(upperBound) < 0)
+                                note.date.after(lowerBound)
+                                        && note.date.before(upperBound))
                 .filter(note -> {
                     for (String keyword : keywords) {
                         if (note.title.contains(keyword)) return true;
