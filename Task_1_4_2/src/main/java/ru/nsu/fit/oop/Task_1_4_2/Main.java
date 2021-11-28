@@ -15,10 +15,10 @@ public class Main {
 
     @Option(name = "-add", usage = "adds a note to a notebook", handler = AddOptionHandler.class,
             forbids = {"-rem", "-show"})
-    private String[] addArgs = null;
+    private String[] addArgs = {};
 
     @Option(name = "-rem", usage = "removes a note from a notebook", forbids = {"-add", "-show"})
-    private String remTitle = null;
+    private String remTitle = "";
 
     @Option(name = "-show", usage = """
             with arguments:
@@ -28,7 +28,7 @@ public class Main {
             prints all notes sorted by its publication date""",
             handler = ShowOptionHandler.class,
             forbids = {"-add", "-rem"})
-    private Object[] showArgs = null;
+    private Object[] showArgs = {};
 
     public static void main(String[] args) {
         new Main().doMain(args);
@@ -42,9 +42,9 @@ public class Main {
 
             Notebook notebook = NotebookSerialization.deserialize();
 
-            if (addArgs != null) {
+            if (addArgs.length == 2) {
                 notebook.add(addArgs[0], addArgs[1]);
-            } else if (remTitle != null) {
+            } else if (!remTitle.equals("")) {
                 notebook.remove(remTitle);
             } else if (showArgs.length >= 2) {
                 notebook.printByTimeAndKeywords(
