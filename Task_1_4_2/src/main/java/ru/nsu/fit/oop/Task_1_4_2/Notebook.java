@@ -1,14 +1,8 @@
 package ru.nsu.fit.oop.Task_1_4_2;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import org.kohsuke.args4j.Option;
-import org.kohsuke.args4j.spi.StringArrayOptionHandler;
 
-import java.io.IOException;
-import java.time.Instant;
-import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Stream;
 
 public class Notebook {
 
@@ -31,11 +25,7 @@ public class Notebook {
     }
 
     public void remove(String title) {
-        Optional<Note> optionalNote = notes.stream()
-                .filter(note -> note.title.equals(title))
-                .findFirst();
-
-        optionalNote.ifPresent(notes::remove);
+        notes.removeIf(note -> note.title.equals(title));
     }
 
     public void printSortedByTime() {
