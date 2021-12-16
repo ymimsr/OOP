@@ -20,7 +20,7 @@ public class ReportCard {
                 .mapToInt(Course::getGrade)
                 .average();
 
-        if (avgGrade.isEmpty()) throw new NullPointerException();
+        if (avgGrade.isEmpty()) throw new IllegalStateException();
 
         return avgGrade.getAsDouble();
     }
@@ -37,7 +37,7 @@ public class ReportCard {
                 .mapToInt(Course::getGrade)
                 .average();
 
-        if (avgGrade.isEmpty()) throw new NullPointerException();
+        if (avgGrade.isEmpty()) throw new IllegalStateException();
 
         return avgGrade.getAsDouble();
     }
