@@ -1,15 +1,14 @@
 package ru.nsu.fit.oop.Task_1_4_2;
 
 
-import org.kohsuke.args4j.*;
-import org.kohsuke.args4j.spi.*;
+import org.kohsuke.args4j.CmdLineException;
+import org.kohsuke.args4j.CmdLineParser;
+import org.kohsuke.args4j.Option;
 import ru.nsu.fit.oop.Task_1_4_2.handlers.AddOptionHandler;
 import ru.nsu.fit.oop.Task_1_4_2.handlers.ShowOptionHandler;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class Main {
 
@@ -17,7 +16,7 @@ public class Main {
             forbids = {"-rem", "-show"})
     private String[] addArgs = {};
 
-    @Option(name = "-rem", usage = "removes a note from a notebook", forbids = {"-add", "-show"})
+    @Option(name = "-rem", usage = "removes a note from a notebook", metaVar = "TITLE", forbids = {"-add", "-show"})
     private String remTitle = "";
 
     @Option(name = "-show", usage = """
@@ -52,7 +51,7 @@ public class Main {
                         (Date) showArgs[1],
                         Arrays.copyOfRange(showArgs, 2, showArgs.length, String[].class)
                 );
-            } else if (showArgs.length == 1){
+            } else if (showArgs.length == 1) {
                 notebook.printSortedByTime();
             }
 
