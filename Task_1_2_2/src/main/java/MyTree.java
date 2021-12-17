@@ -1,141 +1,188 @@
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class MyTree<E> implements Collection<E> {
 
-    private Node root = null;
-    private int treeSize = 0;
+    private E data;
+    private MyTree<E> ancestor;
+    private List<MyTree<E>> descendants;
+    private int size;
 
-    private class Node {
-
-        private final E value;
-        private final Node ancestor;
-        private final List<Node> descendants = new ArrayList<>();
-
-        public Node(E value, Node ancestor) {
-            this.value = value;
-            this.ancestor = ancestor;
-        }
-
-        public E getValue() {
-            return value;
-        }
-
-        public List<Node> getDescendants() {
-            return descendants;
-        }
-
-        public Node getAncestor() {
-            return ancestor;
-        }
-
-        public void addDescendant(Node desc) {
-            descendants.add(desc);
-        }
-
+    public MyTree(E data) {
+        this.data = data;
+        this.ancestor = null;
+        size = 1;
     }
 
-    public MyTree(E root) {
-        this.root = new Node(root, null);
-        treeSize++;
+    public MyTree<E> addElem(E elem, MyTree<E> node) {
+        MyTree<E> newNode = new MyTree<>(elem);
+        newNode.ancestor = node;
+        node.descendants.add(newNode);
+        size++;
+
+        return newNode;
     }
 
-    public Node addNode(Node ancestor, E value) {
-        Node node = new Node(value, ancestor);
+    public MyTree<E> addElem(E elem) {
+        MyTree<E> newNode = new MyTree<>(elem);
+        newNode.ancestor = this;
+        descendants.add(newNode);
+        size++;
 
-        ancestor.addDescendant(node);
-        treeSize++;
-
-        return node;
+        return newNode;
     }
-
-    public Node addNode(E value) {
-        Node node = new Node(value, root);
-
-        if (treeSize == 0) {
-            root = node;
-        } else {
-            root.addDescendant(node);
-        }
-
-        return node;
-    }
-
-
 
     @Override
     public int size() {
-        return treeSize;
+        return this.size;
     }
 
     @Override
     public boolean isEmpty() {
-        return treeSize == 0;
+        return this.size == 0;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public boolean contains(Object o) {
+        E obj = (E) o;
+        for (E elem : this) {
+            if (obj.equals(elem)) {
+                return true;
+            }
+        }
+
         return false;
     }
 
     @Override
     public Iterator<E> iterator() {
         return new Iterator<>() {
-            private int treeIndex = 0;
-            private int anIndex = 0;
+            // index is depth of the tree, the depth <= size of tree
+            // value is index in the descendents list
+            //private int[] descIndex = new int[size];
+            private int iterIndex = 0;
             private int descIndex = 0;
-            private Node curNode = null;
 
             @Override
             public boolean hasNext() {
-                return treeIndex < treeSize;
+                return iterIndex < size;
             }
 
             @Override
             public E next() {
-                Node nextNode = null;
-
-                if (treeIndex == 0) {
-                    curNode = root;
-                    nextNode = root;
+                if (descendants.size() != 0) {
+                    return descendants.get(descIndex++).iterator().next();
                 } else {
-                    if (curNode.getDescendants().size() > descIndex) {
-                        nextNode = curNode.getDescendants().get(descIndex++);
-                    } else {
-                        descIndex = 0;
-                        anIndex++;
-                        if (anIndex)
-                    }
+                    iterIndex++;
+                    return data;
                 }
-                treeIndex++;
-
-                return nextNode.value;
             }
+
+        };
+    }
+
+    public ListIterator<E> listIterator() {
+        return new ListIterator<>() {
+
+            private int iterIndex = 0;
+            private int descIndex = 0;
+
+            @Override
+            public boolean hasNext() {
+                return iterIndex < size;
+            }
+
+            @Override
+            public E next() {
+                if (descendants.size() != 0) {
+                    return descendants.get(descIndex++).iterator().next();
+                } else {
+                    iterIndex++;
+                    return data;
+                }
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return false;
+            }
+
+            @Override
+            public E previous() {
+                return null;
+            }
+
+            @Override
+            public int nextIndex() {
+                return 0;
+            }
+
+            @Override
+            public int previousIndex() {
+                return 0;
+            }
+
+            @Override
+            public void remove() {
+                if (MyTree.this.ancestor != null) {
+                    MyTree.this.ancestor.descendants.remove(descIndex);
+                }
+            }
+
+            @Override
+            public void set(E e) {
+
+            }
+
+            @Override
+            public void add(E e) {
+
+            }
+
         };
     }
 
     @Override
     public Object[] toArray() {
-        return new Object[0];
+        Object[] array = new Object[size];
+        int i = 0;
+        for (E elem : this) {
+            array[i++] = elem;
+        }
+
+        return array;
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> T[] toArray(T[] a) {
-        return null;
+        if (a.length < size) {
+            T[] eArray = (T[]) Array.newInstance(a.getClass(), size);
+            int i = 0;
+            for (E elem : this) {
+                eArray[i++] = (T) elem;
+            }
+
+            return eArray;
+        } else {
+            int i = 0;
+            for (E elem : this) {
+                a[i++] = (T) elem;
+            }
+
+            return a;
+        }
     }
 
     @Override
     public boolean add(E e) {
-        addNode(e);
-
+        addElem(e);
         return true;
     }
 
     @Override
     public boolean remove(Object o) {
-
 
         return false;
     }
@@ -162,6 +209,7 @@ public class MyTree<E> implements Collection<E> {
 
     @Override
     public void clear() {
-
+        // garbage collector will do all the work
+        descendants = null;
     }
 }
