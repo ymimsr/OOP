@@ -2,6 +2,8 @@ package ru.nsu.fit.oop.Task_1_4_2;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Notebook {
@@ -83,11 +85,8 @@ public class Notebook {
 
         @Override
         public String toString() {
-            return "Note{" +
-                    "title='" + title + '\'' +
-                    ", text='" + text + '\'' +
-                    ", date=" + date +
-                    '}';
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
+            return title + "[" + simpleDateFormat.format(date) + "]" + text + "\n";
         }
 
     }

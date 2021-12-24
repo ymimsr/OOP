@@ -7,6 +7,8 @@ import org.kohsuke.args4j.Option;
 import ru.nsu.fit.oop.Task_1_4_2.handlers.AddOptionHandler;
 import ru.nsu.fit.oop.Task_1_4_2.handlers.ShowOptionHandler;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -29,17 +31,27 @@ public class Main {
             forbids = {"-add", "-rem"})
     private Object[] showArgs = {};
 
+    @Option(name = "-jsonpath", usage = """
+            sets a custom jsonpath
+            throws an exception if file couldn't be opened""")
+
+    private String jsonPath = null;
+
     public static void main(String[] args) {
-        new Main().doMain(args);
+        new Main().execute(args);
     }
 
-    public void doMain(String[] args) {
+    public void execute(String[] args) {
         CmdLineParser parser = new CmdLineParser(this);
 
         try {
             parser.parseArgument(args);
 
             Notebook notebook = NotebookSerialization.deserialize();
+
+            if (jsonPath != null) {
+                NotebookSerialization.setJsonPath(jsonPath);
+            }
 
             if (addArgs.length == 2) {
                 notebook.add(addArgs[0], addArgs[1]);
@@ -62,6 +74,9 @@ public class Main {
             System.err.println("java Notebook [options...] arguments...");
             parser.printUsage(System.err);
             System.err.println();
+        } catch (IOException exception) {
+            System.err.println("File couldn't be opened");
+            System.err.println(exception.getMessage());
         }
     }
 

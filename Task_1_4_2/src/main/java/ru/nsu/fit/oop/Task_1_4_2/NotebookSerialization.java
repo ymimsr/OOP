@@ -33,7 +33,7 @@ public class NotebookSerialization {
         }
     }
 
-    public static Notebook deserialize() {
+    public static Notebook deserialize() throws IOException {
         Notebook notebook;
 
         try {
@@ -44,9 +44,6 @@ public class NotebookSerialization {
             notebook = new Notebook(notes);
         } catch (FileNotFoundException ignored) {
             notebook = new Notebook();
-        } catch (IOException e) {
-            notebook = new Notebook();
-            e.printStackTrace();
         }
 
         return notebook;
