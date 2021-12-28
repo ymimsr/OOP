@@ -32,7 +32,7 @@ public class Main {
     private Object[] showArgs = {};
 
     @Option(name = "-jsonpath", usage = """
-            sets a custom jsonpath
+            sets a custom jsonpath (by default resources/notebook.json)
             throws an exception if file couldn't be opened""")
 
     private String jsonPath = null;
