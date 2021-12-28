@@ -86,7 +86,7 @@ public class Notebook {
         @Override
         public String toString() {
             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy hh:mm");
-            return title + "[" + simpleDateFormat.format(date) + "]" + text + "\n";
+            return title + " [" + simpleDateFormat.format(date) + "] " + text + "\n";
         }
 
     }
