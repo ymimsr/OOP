@@ -1,10 +1,12 @@
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.function.Consumer;
 
-public class MyTree<E> implements Collection<E> {
+public class MyTree<E extends Comparable<E>> implements Collection<E> {
 
     private Node<E> root;
     private int size = 0;
+    private int modCount = 0;
 
     public MyTree(E data) {
         this.root = new Node<>(data);
@@ -46,6 +48,7 @@ public class MyTree<E> implements Collection<E> {
         }
 
         size++;
+        modCount++;
         return node;
     }
 
@@ -59,6 +62,7 @@ public class MyTree<E> implements Collection<E> {
         }
 
         size++;
+        modCount++;
         return node;
     }
 
@@ -89,6 +93,7 @@ public class MyTree<E> implements Collection<E> {
     public Iterator<E> iterator() {
         return new Iterator<>() {
 
+            private final int iterModCount = modCount;
             private final Stack<Node<E>> stack = new Stack<>();
 
             {
@@ -102,6 +107,8 @@ public class MyTree<E> implements Collection<E> {
 
             @Override
             public E next() {
+                if (iterModCount != modCount) throw new ConcurrentModificationException();
+
                 if (!stack.isEmpty()) {
                     Node<E> curNode = stack.pop();
                     for (int i = curNode.descendants.size() - 1; i >= 0; i--) {
@@ -160,33 +167,47 @@ public class MyTree<E> implements Collection<E> {
         E obj = (E) o;
         // if we need to remove the root node
         // we will make the leftmost descendent of root the new root
+        if (root == null) return false;
+
         if (root.data.equals(obj)) {
             if (root.descendants.size() != 0) {
                 for (int i = 1; i < root.descendants.size(); i++) {
                     root.descendants.get(0).descendants.add(root.descendants.get(i));
+                    root.descendants.get(i).ancestor = root.descendants.get(0);
                 }
-                root.descendants.get(0).ancestor = null;
                 root = root.descendants.get(0);
+                root.ancestor = null;
                 size--;
             } else {
                 root = null;
                 size = 0;
             }
+            modCount++;
             return true;
         }
 
-        Node<E> curNode = root;
-        for (int i = 0; i < size;) {
-            for (int k = 0; k < curNode.descendants.size(); k++) {
-                Node<E> descendant = curNode.descendants.get(k);
-                if (descendant.data.equals(obj)) {
-                    curNode.descendants.addAll(k, descendant.descendants);
-                    descendant.descendants.forEach(eNode -> eNode.ancestor = curNode);
-                    curNode.descendants.remove(k);
-                    return true;
-                }
-                i++;
+        return removeRec(root, o);
+    }
+
+    @SuppressWarnings("unchecked")
+    public boolean removeRec(Node<E> curNode, Object o) {
+        E elem = (E) o;
+        for (int i = 0; i < curNode.descendants.size(); i++) {
+            if (elem.equals(curNode.descendants.get(i).data)) {
+                curNode.descendants.addAll(i + 1, curNode.descendants.get(i).descendants);
+                curNode.descendants.remove(i);
+                size--;
+                modCount++;
+                return true;
             }
+        }
+
+        if (!curNode.descendants.isEmpty()) {
+            boolean result = false;
+            for (Node<E> node : curNode.descendants) {
+                result |= removeRec(node, o);
+            }
+            return result;
         }
 
         return false;
@@ -235,6 +256,7 @@ public class MyTree<E> implements Collection<E> {
     public void clear() {
         // garbage collector will do all the work
         root = null;
+        modCount = 0;
         size = 0;
     }
 }
