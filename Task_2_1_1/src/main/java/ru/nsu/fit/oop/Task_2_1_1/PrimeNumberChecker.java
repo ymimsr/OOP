@@ -6,6 +6,7 @@ import org.apache.commons.lang3.tuple.MutablePair;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 public class PrimeNumberChecker {
 
@@ -36,10 +37,31 @@ public class PrimeNumberChecker {
         return new ImmutablePair<>(false, timer.getTime());
     }
 
+    private ImmutablePair<Boolean, Long> singleThreadSolution(int[] ps) {
+        StopWatch timer = new StopWatch();
+        timer.start();
+
+        for (int p : ps) {
+            for (int i = 2; i < p; i++) {
+                if (Thread.currentThread().isInterrupted()) {
+                    timer.stop();
+                    return new ImmutablePair<>(false, timer.getTime());
+                } else if (p % i == 0) {
+                    timer.stop();
+                    return new ImmutablePair<>(true, timer.getTime());
+                }
+            }
+        }
+
+        timer.stop();
+        return new ImmutablePair<>(false, timer.getTime());
+    }
+
     private int threadNum;
 
     public void setThreadNum(int threadNum)
     {
+
         this.threadNum = threadNum;
     }
 
@@ -69,16 +91,31 @@ public class PrimeNumberChecker {
         boolean solution = false;
         try {
             List<Future<Boolean>> futures = executorService.invokeAll(toRun);
-            solution = futures.stream().anyMatch(future -> {
-                try {
-                    return future.get();
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                    return false;
+            while(true) {
+                if (futures.isEmpty()) break;
+                List<Future<Boolean>> doneFutures = futures
+                        .stream()
+                        .filter(Future::isDone)
+                        .collect(Collectors.toList());
+
+                if (!doneFutures.isEmpty()) {
+                    solution = doneFutures
+                            .stream()
+                            .anyMatch(future -> {
+                                try {
+                                    return future.get();
+                                } catch (InterruptedException | ExecutionException e) {
+                                    e.printStackTrace();
+                                    return false;
+                                }
+                            });
+                    if (solution)
+                        break;
+                    futures.removeAll(doneFutures);
                 }
-            });
-        } catch (InterruptedException exception) {
-            exception.printStackTrace();
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         executorService.shutdownNow();
