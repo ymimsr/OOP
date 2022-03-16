@@ -1,9 +1,17 @@
 package ru.nsu.fit.oop.Task_2_1_1;
 
+import org.apache.commons.lang3.time.StopWatch;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import java.util.*;
 import java.util.concurrent.*;
 
 public class PrimeNumberChecker {
+
+    public PrimeNumberChecker() {
+        setThreadNum(4);
+    }
 
     private boolean isCompositeNumber(int p) {
         for (int i = 2; i < p; i++) {
@@ -13,22 +21,31 @@ public class PrimeNumberChecker {
         return false;
     }
 
-    public boolean linearSolution(int[] ps) {
+    public ImmutablePair<Boolean, Long> linearSolution(int[] ps) {
+        StopWatch timer = new StopWatch();
+        timer.start();
+
         for (int p : ps) {
-            if (isCompositeNumber(p)) return true;
+            if (isCompositeNumber(p)) {
+                timer.stop();
+                return new ImmutablePair<>(true, timer.getTime());
+            }
         }
 
-        return false;
+        timer.stop();
+        return new ImmutablePair<>(false, timer.getTime());
     }
 
-    private int threadNum = 4;
+    private int threadNum;
 
-    public void setThreadNum(int threadNum) {
+    public void setThreadNum(int threadNum)
+    {
         this.threadNum = threadNum;
     }
 
-    public boolean threadSolution(int[] ps) {
-        boolean solution = false;
+    public ImmutablePair<Boolean, long[]> threadSolution(int[] ps) {
+        long[] threadSolutionTime = new long[threadNum];
+        Arrays.fill(threadSolutionTime, 0);
 
         ExecutorService executorService = Executors.newFixedThreadPool(threadNum);
         Map<Integer, Integer> positionMap = calculatePositions(ps, threadNum);
@@ -41,10 +58,15 @@ public class PrimeNumberChecker {
                 int[] subPs = new int[entry.getValue() - entry.getKey()];
                 System.arraycopy(ps, entry.getKey(), subPs,0, subPs.length);
 
-                return linearSolution(subPs);
+                ImmutablePair<Boolean, Long> linearSolutionPair = linearSolution(subPs);
+                int range = ps.length / threadNum == 0 ? 1 : ps.length / threadNum;
+                threadSolutionTime[entry.getKey() / range] += linearSolutionPair.right;
+
+                return linearSolutionPair.left;
             });
 
 
+        boolean solution = false;
         try {
             List<Future<Boolean>> futures = executorService.invokeAll(toRun);
             solution = futures.stream().anyMatch(future -> {
@@ -60,7 +82,7 @@ public class PrimeNumberChecker {
         }
 
         executorService.shutdownNow();
-        return solution;
+        return new ImmutablePair<>(solution, threadSolutionTime);
     }
 
     private Map<Integer, Integer> calculatePositions(int[] ps, int threadNum) {
@@ -87,10 +109,17 @@ public class PrimeNumberChecker {
         return positionMap;
     }
 
-    public boolean parallelSolution(int[] ps) {
-        return Arrays.stream(ps)
+    public ImmutablePair<Boolean, Long> parallelSolution(int[] ps) {
+        StopWatch timer = new StopWatch();
+        timer.start();
+
+        boolean solution = Arrays.stream(ps)
                 .parallel()
                 .anyMatch(this::isCompositeNumber);
+
+        timer.stop();
+        return new ImmutablePair<>(solution, timer.getTime());
     }
+
 
 }
