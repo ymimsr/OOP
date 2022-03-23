@@ -80,11 +80,11 @@ public class PrimeNumberChecker {
                 int[] subPs = new int[entry.getValue() - entry.getKey()];
                 System.arraycopy(ps, entry.getKey(), subPs,0, subPs.length);
 
-                ImmutablePair<Boolean, Long> linearSolutionPair = linearSolution(subPs);
+                ImmutablePair<Boolean, Long> singleThreadSolution = singleThreadSolution(subPs);
                 int range = ps.length / threadNum == 0 ? 1 : ps.length / threadNum;
-                threadSolutionTime[entry.getKey() / range] += linearSolutionPair.right;
+                threadSolutionTime[entry.getKey() / range] += singleThreadSolution.right;
 
-                return linearSolutionPair.left;
+                return singleThreadSolution.left;
             });
 
 
