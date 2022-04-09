@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "workTime": 900
+  },
+  {
+    "id": 2,
+    "workTime": 700
+  },
+  {
+    "id": 3,
+    "workTime": 600
+  },
+  {
+    "id": 4,
+    "workTime": 800
+  },
+  {
+    "id": 5,
+    "workTime": 500
+  }
+]
