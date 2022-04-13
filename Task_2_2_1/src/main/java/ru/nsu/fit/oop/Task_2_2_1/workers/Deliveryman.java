@@ -3,9 +3,17 @@ package ru.nsu.fit.oop.Task_2_2_1.workers;
 import ru.nsu.fit.oop.Task_2_2_1.Order;
 import ru.nsu.fit.oop.Task_2_2_1.queue.IBlockingQueue;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Deliveryman extends Worker {
+
+    private static final Logger LOGGER;
+
+    static {
+        LOGGER = Logger.getLogger(MethodHandles.lookup().lookupClass().getName());
+    }
 
     private final IBlockingQueue<Order> storage;
 
@@ -20,19 +28,15 @@ public class Deliveryman extends Worker {
     }
 
     @Override
-    protected void work() {
-        try {
-            List<Order> orders = getOrders();
-            deliverOrder(orders);
-        } catch (InterruptedException ex) {
-            ex.printStackTrace();
-        }
+    protected void work() throws InterruptedException {
+        List<Order> orders = getOrders();
+        deliverOrder(orders);
     }
 
     private List<Order> getOrders() throws InterruptedException {
         List<Order> orders = storage.pollAvailable(carCapacity);
         for (Order order : orders) {
-            System.out.println("Order #" + order.getId() + " is taken by deliveryman #" + getId());
+            LOGGER.info(("Order #" + order.getId() + " is taken by deliveryman #" + getId()));
         }
 
         return orders;
@@ -41,7 +45,7 @@ public class Deliveryman extends Worker {
     private void deliverOrder(List<Order> orders) throws InterruptedException {
         Thread.sleep(workTime);
         for (Order order : orders) {
-            System.out.println("Order # " + order.getId() + " has been delivered by deliveryman #" + getId());
+            LOGGER.info("Order #" + order.getId() + " has been delivered by deliveryman #" + getId());
         }
     }
 }

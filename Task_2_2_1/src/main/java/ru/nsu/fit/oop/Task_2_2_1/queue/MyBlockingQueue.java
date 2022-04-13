@@ -46,4 +46,9 @@ public class MyBlockingQueue<E> implements IBlockingQueue<E> {
 
         return available;
     }
+
+    @Override
+    public boolean isEmpty() {
+        return queue.size() == 0;
+    }
 }

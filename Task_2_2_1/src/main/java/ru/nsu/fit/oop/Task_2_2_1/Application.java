@@ -7,10 +7,16 @@ import ru.nsu.fit.oop.Task_2_2_1.queue.MyBlockingQueue;
 public class Application {
 
     public static void main(String[] args) {
-        DAOFactory daoFactory = new GsonDAOFactory("Task_2_2_1/src/main/resources");
-        Pizzeria pizzeria = new Pizzeria(daoFactory, new MyBlockingQueue<>(), new MyBlockingQueue<>());
+        DAOFactory daoFactory = new GsonDAOFactory("Task_2_2_1/src/main/resources/configs");
+        Pizzeria pizzeria = new Pizzeria(daoFactory);
 
-        pizzeria.openPizzeria();
+        pizzeria.openPizzeria(new MyBlockingQueue<>(), new MyBlockingQueue<>());
+        try {
+            Thread.sleep(10000);
+        } catch (InterruptedException ex) {
+            ex.printStackTrace();
+        }
+        pizzeria.closePizzeria();
     }
 
 }

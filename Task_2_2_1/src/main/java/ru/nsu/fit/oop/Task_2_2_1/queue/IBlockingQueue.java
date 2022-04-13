@@ -8,5 +8,6 @@ public interface IBlockingQueue<E> {
     void add(E e) throws InterruptedException;
     E poll() throws InterruptedException;
     List<E> pollAvailable(int maxSize) throws InterruptedException;
+    boolean isEmpty();
 
 }
