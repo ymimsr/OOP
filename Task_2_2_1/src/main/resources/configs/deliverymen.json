@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "workTime": 900,
+    "carCapacity": 4
+  },
+  {
+    "id": 2,
+    "workTime": 700,
+    "carCapacity": 4
+  },
+  {
+    "id": 3,
+    "workTime": 600,
+    "carCapacity": 3
+  },
+  {
+    "id": 4,
+    "workTime": 800,
+    "carCapacity": 5
+  },
+  {
+    "id": 5,
+    "workTime": 500,
+    "carCapacity": 2
+  }
+]
