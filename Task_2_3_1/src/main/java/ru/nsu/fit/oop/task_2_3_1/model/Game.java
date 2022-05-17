@@ -9,10 +9,25 @@ import java.util.List;
 public class Game {
 
     private List<Snake> snakes = new ArrayList<>();
+    private List<SnakeAI> snakeAIS = new ArrayList<>();
     private Snake selfSnake;
     private Field field;
     private GameState gameState = GameState.RUNNING;
     private int maxSnakeSize;
+
+    private Game(
+            Field field,
+            int maxSnakeSize,
+            int snakeCount
+    ) {
+        this.field = field;
+        this.maxSnakeSize = maxSnakeSize;
+        initSnakes(snakeCount);
+        for (Snake snake : snakes) {
+            if (snake != selfSnake)
+                snakeAIS.add(new SnakeAI(this, snake));
+        }
+    }
 
     public Game(
             int sizeX,
@@ -22,16 +37,11 @@ public class Game {
             int[] foodValues,
             int maxSnakeSize,
             int snakeCount) {
-        // init field
-        this.field = FieldGenerator.generateField(sizeX, sizeY, obstacleCount, foodCount, foodValues);
-        this.maxSnakeSize = maxSnakeSize;
-        initSnakes(snakeCount);
+        this(FieldGenerator.generateField(sizeX, sizeY, obstacleCount, foodCount, foodValues), maxSnakeSize, snakeCount);
     }
 
     public Game(String fileName, int maxSnakeSize, int snakeCount) {
-        this.field = FieldGenerator.generateFieldFromFile(fileName);
-        this.maxSnakeSize = maxSnakeSize;
-        initSnakes(snakeCount);
+        this(FieldGenerator.generateFieldFromFile(fileName), maxSnakeSize, snakeCount);
     }
 
     public List<Snake> getSnakes() {
@@ -68,11 +78,10 @@ public class Game {
     }
 
     public void move() {
-        for (Snake snake: snakes) {
-            snake.move();
-        }
-
+        snakeAIS.forEach(SnakeAI::setDirection);
+        snakes.forEach(Snake::move);
         snakes.removeIf(snake -> !snake.isAlive());
+        snakeAIS.removeIf(snakeAI -> !getSelfSnake().isAlive());
 
         if (!selfSnake.isAlive()) {
             gameState = GameState.LOST;

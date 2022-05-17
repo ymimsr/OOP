@@ -66,6 +66,10 @@ public class Snake {
         snakeBody.clear();
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
     public void setDirection(Direction direction) {
         switch (direction) {
             case UP -> this.direction = this.direction == Direction.DOWN ? this.direction : direction;
@@ -89,6 +93,10 @@ public class Snake {
 
     public void addGrowingMoves(int delta) {
         growingMoves += delta;
+    }
+
+    public SnakePart getHead() {
+        return head;
     }
 
 }

@@ -30,7 +30,7 @@ public class SnakeApplication extends Application {
         Canvas canvas = new Canvas(600, 600);
         gc = canvas.getGraphicsContext2D();
 
-        game = new Game("field1.txt", 20, 1);
+        game = new Game("field1.txt", 20, 2);
         selfSnake = game.getSelfSnake();
 
         canvas.setFocusTraversable(true);

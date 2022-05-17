@@ -31,6 +31,10 @@ public class Tile {
         return collidable != null;
     }
 
+    public Collidable getCollidable() {
+        return collidable;
+    }
+
     public Field getField() {
         return field;
     }
