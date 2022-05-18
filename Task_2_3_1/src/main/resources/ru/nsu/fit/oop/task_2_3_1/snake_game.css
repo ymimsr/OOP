@@ -8,15 +8,12 @@
     -fx-font-size: 40;
 }
 
-.button {
-    -fx-background-color: transparent;
-}
-
 .button:hover {
     -fx-text-fill: WHITE;
 }
 
 .button {
+    -fx-background-color: transparent;
     -fx-font-family: 'Windows Command Prompt';
     -fx-text-fill: GREEN;
     -fx-font-size: 50;
@@ -28,6 +25,16 @@
 
 .main-label {
     -fx-font-size: 80;
+}
+
+.slider .track {
+    -fx-background-color: GREEN;
+    -fx-background-radius: 0;
+}
+
+.slider .thumb {
+    -fx-background-color: WHITE;
+    -fx-background-radius: 0;
 }
 
 #gameNameLabel {
