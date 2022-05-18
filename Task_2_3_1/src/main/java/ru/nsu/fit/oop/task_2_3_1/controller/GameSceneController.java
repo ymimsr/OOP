@@ -30,9 +30,17 @@ import java.util.TimerTask;
 
 public class GameSceneController implements Initializable {
 
-    protected static Level level = null;
     private Game game;
-    private int deltaTime;
+
+    protected static int sizeX;
+    protected static int sizeY;
+    protected static String fileName = "";
+    protected static int obstaclesCount;
+    protected static int foodCount;
+    protected static int[] foodValues;
+    protected static int maxSnakeSize;
+    protected static int snakeCount;
+    protected static int deltaTime;
 
     @FXML
     private Canvas canvas;
@@ -46,9 +54,19 @@ public class GameSceneController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Painter painter = new CanvasPainter(canvas.getGraphicsContext2D(), selfSizeLabel, maxBotSizeLabel, needToWinLabel);
-        if (level != null) {
-            game = new Game(level.getFileName(), level.getMaxSnakeSize(), level.getSnakeCount(), painter);
-            deltaTime = level.getDeltaTime();
+        if (!fileName.equals("")) {
+            game = new Game(fileName, maxSnakeSize, snakeCount, painter);
+        } else {
+            game = new Game(
+                    sizeX,
+                    sizeY,
+                    obstaclesCount,
+                    foodCount,
+                    foodValues,
+                    maxSnakeSize,
+                    snakeCount,
+                    painter
+            );
         }
         canvas.setFocusTraversable(true);
         canvas.setOnKeyPressed(e -> {

@@ -6,5 +6,20 @@
 <AnchorPane prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: black;" stylesheets="@snake_game.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nsu.fit.oop.task_2_3_1.controller.CustomMapSceneController">
    <children>
       <Label alignment="CENTER" styleClass="main-label" text="Settings" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0" />
+      <Label text="Width" AnchorPane.leftAnchor="65.0" AnchorPane.topAnchor="175.0" />
+      <Slider fx:id="widthSlider" blockIncrement="5.0" max="50.0" min="10.0" showTickLabels="true" showTickMarks="true" value="10.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="225.0" />
+      <Label text="Height" AnchorPane.leftAnchor="55.0" AnchorPane.topAnchor="275.0" />
+      <Slider fx:id="heightSlider" blockIncrement="5.0" max="50.0" min="10.0" showTickLabels="true" showTickMarks="true" value="10.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="420.0" AnchorPane.topAnchor="325.0" />
+      <Label text="Obstacles" AnchorPane.leftAnchor="225.0" AnchorPane.topAnchor="175.0" />
+      <Slider fx:id="obstaclesSlider" blockIncrement="5.0" showTickLabels="true" showTickMarks="true" AnchorPane.leftAnchor="235.0" AnchorPane.topAnchor="225.0" />
+      <Label text="Food" AnchorPane.leftAnchor="265.0" AnchorPane.topAnchor="275.0" />
+      <Slider fx:id="foodSlider" blockIncrement="1.0" max="15.0" min="1.0" showTickLabels="true" showTickMarks="true" AnchorPane.leftAnchor="235.0" AnchorPane.topAnchor="325.0" />
+      <Label text="Bots" AnchorPane.rightAnchor="75.0" AnchorPane.topAnchor="175.0" />
+      <Slider fx:id="botsSlider" blockIncrement="1.0" max="5.0" showTickLabels="true" showTickMarks="true" AnchorPane.leftAnchor="420.0" AnchorPane.topAnchor="225.0" />
+      <Label text="Win size" AnchorPane.rightAnchor="45.0" AnchorPane.topAnchor="275.0" />
+      <Slider fx:id="maxSizeSlider" blockIncrement="1.0" max="30.0" min="10.0" showTickLabels="true" showTickMarks="true" value="10.0" AnchorPane.leftAnchor="420.0" AnchorPane.topAnchor="325.0" />
+      <Button mnemonicParsing="false" onAction="#startButtonClicked" text="Start" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+      <Label text="Speed" AnchorPane.leftAnchor="258.0" AnchorPane.topAnchor="375.0" />
+      <Slider fx:id="deltaTimeSlider" majorTickUnit="75.0" max="500.0" min="150.0" showTickLabels="true" showTickMarks="true" value="150.0" AnchorPane.leftAnchor="235.0" AnchorPane.topAnchor="425.0" />
    </children>
 </AnchorPane>

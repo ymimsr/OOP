@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 import ru.nsu.fit.oop.task_2_3_1.SnakeApplication;
+import ru.nsu.fit.oop.task_2_3_1.model.Game;
 import ru.nsu.fit.oop.task_2_3_1.model.field.Level;
 
 import java.io.IOException;
@@ -25,21 +26,29 @@ public class LevelSceneController {
 
     @FXML
     private void levelOneButtonClicked(ActionEvent event) throws IOException {
-        GameSceneController.level = Level.LEVEL_1;
+        initGameScene(Level.LEVEL_1);
         loadGameScene(event);
     }
 
     @FXML
     private void levelTwoButtonClicked(ActionEvent event) throws IOException {
-        GameSceneController.level = Level.LEVEL_2;
+        initGameScene(Level.LEVEL_2);
         loadGameScene(event);
     }
 
     @FXML
     private void levelThreeButtonClicked(ActionEvent event) throws IOException {
-        GameSceneController.level = Level.LEVEL_3;
+        initGameScene(Level.LEVEL_3);
         loadGameScene(event);
     }
+
+    private void initGameScene(Level level) {
+        GameSceneController.fileName = level.getFileName();
+        GameSceneController.maxSnakeSize = level.getMaxSnakeSize();
+        GameSceneController.snakeCount = level.getSnakeCount();
+        GameSceneController.deltaTime = level.getDeltaTime();
+    }
+
 
     private void loadGameScene(ActionEvent event) throws IOException {
         Parent newRoot = FXMLLoader.load(Objects.requireNonNull(SnakeApplication.class.getResource("game_scene.fxml")));
