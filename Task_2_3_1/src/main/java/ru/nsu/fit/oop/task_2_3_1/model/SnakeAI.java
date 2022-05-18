@@ -22,6 +22,10 @@ public class SnakeAI {
         updateSnakes();
     }
 
+    public Snake getSelfSnake() {
+        return selfSnake;
+    }
+
     private void updateSnakes() {
         snakes.clear();
         for (Snake curSnake : game.getSnakes()) {
@@ -32,12 +36,12 @@ public class SnakeAI {
 
     public void setDirection() {
         if (curPath.isEmpty())
-            safeStrategy1();
+            safeStrategy();
 
         selfSnake.setDirection(Objects.requireNonNull(curPath.poll()));
     }
 
-    public void safeStrategy1() {
+    private void safeStrategy() {
         updateSnakes();
         List<Position> foodPositions = getFoodPositions();
         Map<Position, Deque<Direction>> curPaths = closestFoodInRegardsToOtherSnakes(foodPositions);
@@ -45,7 +49,7 @@ public class SnakeAI {
         if (!curPaths.isEmpty()) {
             curPath = curPaths.entrySet()
                     .stream()
-                    .min(Comparator.comparing(pair -> pair.getValue().size()))
+                    .min(Comparator.comparing(pair -> ((Food) field.getTile(pair.getKey()).getCollidable()).getFoodValue()))
                     .get()
                     .getValue();
         } else {
@@ -53,14 +57,14 @@ public class SnakeAI {
         }
     }
 
-    public List<Position> getFoodPositions() {
+    private List<Position> getFoodPositions() {
         return field.getFoods()
                 .stream()
                 .map(food -> food.getTile().getPosition())
                 .collect(Collectors.toList());
     }
 
-    public Map<Position, Deque<Direction>> closestFoodInRegardsToOtherSnakes(List<Position> foodPositions) {
+    private Map<Position, Deque<Direction>> closestFoodInRegardsToOtherSnakes(List<Position> foodPositions) {
         Map<Position, Deque<Direction>> result = new HashMap<>();
 
         Map<Position, Deque<Direction>> selfFoodPaths = dijkstra(foodPositions, this.selfSnake);
@@ -89,7 +93,7 @@ public class SnakeAI {
      * @param target list of food
      * @return list of paths
      */
-    public Map<Position, Deque<Direction>> dijkstra(List<Position> target, Snake curSnake) {
+    private Map<Position, Deque<Direction>> dijkstra(List<Position> target, Snake curSnake) {
         Position source = curSnake.getHead().getTile().getPosition();
         Map<Position, Integer> distance = new HashMap<>();
         Map<Position, Deque<Direction>> paths = new HashMap<>();
@@ -138,7 +142,7 @@ public class SnakeAI {
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public Map<Direction, Position> getNeighbours(Position position, Direction direction) {
+    private Map<Direction, Position> getNeighbours(Position position, Direction direction) {
         Map<Direction, Position> neighbours = new HashMap<>();
         switch (direction) {
             case UP -> {
@@ -174,27 +178,9 @@ public class SnakeAI {
             neighbours.put(nextDirection, nextPosition);
     }
 
-    public boolean isSafePosition(Position position) {
-        return !(field.getTile(position).getCollidable() instanceof Obstacle);
-    }
-
-    private static class Pair<K, V> {
-        K l;
-        V r;
-
-        public Pair(K l, V r) {
-            this.l = l;
-            this.r = r;
-        }
-
-        public K left() {
-            return l;
-        }
-
-        public V right() {
-            return r;
-        }
-
+    private boolean isSafePosition(Position position) {
+        Collidable collidable = field.getTile(position).getCollidable();
+        return !(collidable instanceof Obstacle || collidable instanceof SnakePart);
     }
 
 }

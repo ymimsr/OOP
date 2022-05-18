@@ -18,7 +18,7 @@ public class FieldGenerator {
     public static Field generateFieldFromFile(String fileName) {
         try (
                 InputStream is = FieldGenerator.class.getClassLoader().getResourceAsStream(
-                        "ru/nsu/fit/oop/task_2_3_1/model/field/" + fileName
+                        "ru/nsu/fit/oop/task_2_3_1/model/levels/" + fileName
                 );
                 Scanner scanner = new Scanner(is)
         ) {
@@ -96,7 +96,7 @@ public class FieldGenerator {
         }
 
         // generating food
-        for (int i = 0; i > foodCount; i++) {
+        for (int i = 0; i < foodCount; i++) {
             Position randomPos = randomPosition(sizeX, sizeY);
             if (tileField[randomPos.x()][randomPos.y()].hasCollidable()) {
                 i--;
@@ -108,7 +108,7 @@ public class FieldGenerator {
         }
 
         // generating obstacles
-        for (int i = 0; i > obstacleCount; i++) {
+        for (int i = 0; i < obstacleCount; i++) {
             Position randomPos = randomPosition(sizeX, sizeY);
             if (tileField[randomPos.x()][randomPos.y()].hasCollidable()) {
                 i--;

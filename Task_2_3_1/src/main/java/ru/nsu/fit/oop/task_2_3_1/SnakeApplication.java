@@ -2,7 +2,7 @@ package ru.nsu.fit.oop.task_2_3_1;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,27 +10,28 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import ru.nsu.fit.oop.task_2_3_1.model.Direction;
 import ru.nsu.fit.oop.task_2_3_1.model.Game;
-import ru.nsu.fit.oop.task_2_3_1.model.GameState;
 import ru.nsu.fit.oop.task_2_3_1.model.Snake;
-import ru.nsu.fit.oop.task_2_3_1.view.Painter;
+import ru.nsu.fit.oop.task_2_3_1.view.CanvasPainter;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class SnakeApplication extends Application {
 
-    private int sizeX, sizeY;
-    private GraphicsContext gc;
-    private Game game;
-    private Snake selfSnake;
-
     @Override
-    public void start(Stage stage)
-    {
-        StackPane root = new StackPane();
+    public void start(Stage stage) throws IOException {
+        Parent root = FXMLLoader.load(Objects.requireNonNull(SnakeApplication.class.getResource("start_scene.fxml")));
+        stage.setTitle("Snake");
+        stage.setScene(new Scene(root));
+        //stage.setResizable(false);
+        stage.show();
+
+
+        /*StackPane root = new StackPane();
         Canvas canvas = new Canvas(600, 600);
         gc = canvas.getGraphicsContext2D();
 
-        game = new Game("field1.txt", 20, 2);
+        game = new Game(40, 40, 100, 10, new int[]{1, 2, 3, 5, 4, 2, 5, 5, 6, 6}, 20, 4);
         selfSnake = game.getSelfSnake();
 
         canvas.setFocusTraversable(true);
@@ -53,10 +54,10 @@ public class SnakeApplication extends Application {
         stage.setScene(scene);
         stage.show();
 
-        Painter.paint(game, gc);
+        CanvasPainter.paint(game, gc);
         new Thread(() -> {
             while (true) {
-                Painter.paint(game, gc);
+                CanvasPainter.paint(game, gc);
                 game.move();
                 try {
                     Thread.sleep(200);
@@ -64,7 +65,7 @@ public class SnakeApplication extends Application {
                     e.printStackTrace();
                 }
             }
-        }).start();
+        }).start();*/
     }
 
     public static void main(String[] args) {

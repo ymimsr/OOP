@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="600.0" style="-fx-background-color: black;" stylesheets="@snake_game.css" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ru.nsu.fit.oop.task_2_3_1.controller.StartSceneController">
+      <children>
+         <Label fx:id="gameNameLabel" alignment="CENTER" contentDisplay="CENTER" styleClass="start-scene-button" text="Snake" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0" />
+         <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="60.0" AnchorPane.rightAnchor="60.0" AnchorPane.topAnchor="200.0">
+            <children>
+               <Button fx:id="customMapButton" mnemonicParsing="false" onAction="#customMapButtonClicked" styleClass="start-scene-button" text="Start on custom map" textFill="GREEN" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+            <Button fx:id="levelButton" mnemonicParsing="false" onAction="#levelButtonClicked" styleClass="start-scene-button" text="Start on levels" textFill="GREEN" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0" />
+            </children>
+         </AnchorPane>
+      </children>
+</AnchorPane>

@@ -15,4 +15,7 @@ public class Food extends Collidable {
         getTile().getField().respawnFood(this);
     }
 
+    public int getFoodValue() {
+        return foodValue;
+    }
 }
