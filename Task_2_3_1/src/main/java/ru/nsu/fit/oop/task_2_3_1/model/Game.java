@@ -2,6 +2,7 @@ package ru.nsu.fit.oop.task_2_3_1.model;
 
 import ru.nsu.fit.oop.task_2_3_1.model.field.Field;
 import ru.nsu.fit.oop.task_2_3_1.model.field.FieldGenerator;
+import ru.nsu.fit.oop.task_2_3_1.view.Painter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,13 +16,16 @@ public class Game {
     private GameState gameState = GameState.RUNNING;
     private int maxSnakeSize;
 
+    private Painter painter;
+
     private Game(
             Field field,
             int maxSnakeSize,
-            int snakeCount
-    ) {
+            int snakeCount,
+            Painter painter) {
         this.field = field;
         this.maxSnakeSize = maxSnakeSize;
+        this.painter = painter;
         initSnakes(snakeCount);
         for (Snake snake : snakes) {
             if (snake != selfSnake)
@@ -36,12 +40,12 @@ public class Game {
             int foodCount,
             int[] foodValues,
             int maxSnakeSize,
-            int snakeCount) {
-        this(FieldGenerator.generateField(sizeX, sizeY, obstacleCount, foodCount, foodValues), maxSnakeSize, snakeCount);
+            int snakeCount, Painter painter) {
+        this(FieldGenerator.generateField(sizeX, sizeY, obstacleCount, foodCount, foodValues), maxSnakeSize, snakeCount, painter);
     }
 
-    public Game(String fileName, int maxSnakeSize, int snakeCount) {
-        this(FieldGenerator.generateFieldFromFile(fileName), maxSnakeSize, snakeCount);
+    public Game(String fileName, int maxSnakeSize, int snakeCount, Painter painter) {
+        this(FieldGenerator.generateFieldFromFile(fileName), maxSnakeSize, snakeCount, painter);
     }
 
     public List<Snake> getSnakes() {
@@ -58,6 +62,10 @@ public class Game {
 
     public GameState getGameState() {
         return gameState;
+    }
+
+    public int getMaxSnakeSize() {
+        return maxSnakeSize;
     }
 
     public void initSnakes(int snakeCount) {
@@ -78,15 +86,23 @@ public class Game {
     }
 
     public void move() {
+        painter.paint(this);
         snakeAIS.forEach(SnakeAI::setDirection);
         snakes.forEach(Snake::move);
         snakes.removeIf(snake -> !snake.isAlive());
-        snakeAIS.removeIf(snakeAI -> !getSelfSnake().isAlive());
+        snakeAIS.removeIf(snakeAI -> !snakeAI.getSelfSnake().isAlive());
 
         if (!selfSnake.isAlive()) {
             gameState = GameState.LOST;
-        } else if (selfSnake.getSnakeSize() + selfSnake.getGrowingMoves() > maxSnakeSize) {
+        } else if (selfSnake.getSnakeSize() >= maxSnakeSize) {
             gameState = GameState.WON;
+        } else {
+            if (snakes
+                    .stream()
+                    .filter(snake -> snake != selfSnake)
+                    .anyMatch(snake -> snake.getSnakeSize() >= maxSnakeSize)) {
+                gameState = GameState.LOST;
+            }
         }
     }
 }

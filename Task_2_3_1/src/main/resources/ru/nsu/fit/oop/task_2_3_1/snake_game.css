@@ -1,0 +1,35 @@
+@font-face {
+    src: url('fonts/windows_command_prompt.ttf');
+}
+
+.label {
+    -fx-font-family: 'Windows Command Prompt';
+    -fx-text-fill: GREEN;
+    -fx-font-size: 40;
+}
+
+.button {
+    -fx-background-color: transparent;
+}
+
+.button:hover {
+    -fx-text-fill: WHITE;
+}
+
+.button {
+    -fx-font-family: 'Windows Command Prompt';
+    -fx-text-fill: GREEN;
+    -fx-font-size: 50;
+}
+
+.start-scene-button {
+    -fx-font-size: 50;
+}
+
+.main-label {
+    -fx-font-size: 80;
+}
+
+#gameNameLabel {
+    -fx-font-size: 120;
+}
