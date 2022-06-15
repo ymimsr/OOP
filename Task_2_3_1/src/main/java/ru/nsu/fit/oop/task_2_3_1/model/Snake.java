@@ -2,6 +2,7 @@ package ru.nsu.fit.oop.task_2_3_1.model;
 
 import ru.nsu.fit.oop.task_2_3_1.model.field.Field;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -64,6 +65,23 @@ public class Snake {
             snakePart.setTile(null);
         }
         snakeBody.clear();
+    }
+
+    public boolean removeSnakePart(SnakePart snakePart) {
+        if (snakePart == null)
+            return true;
+
+        if (!snakeBody.contains(snakePart))
+            return false;
+
+        int start = snakeBody.indexOf(snakePart);
+        for (int i = start; i < snakeSize; i++) {
+            snakeBody.get(start).tile.setCollidable(null);
+            snakeBody.remove(start);
+            snakeSize--;
+        }
+
+        return true;
     }
 
     public Direction getDirection() {

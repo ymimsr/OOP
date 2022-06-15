@@ -88,7 +88,11 @@ public class Game {
     public void move() {
         painter.paint(this);
         snakeAIS.forEach(SnakeAI::setDirection);
-        snakes.forEach(Snake::move);
+        snakes.forEach(snake -> {
+            if (snake.isAlive()) {
+                snake.move();
+            }
+        });
         snakes.removeIf(snake -> !snake.isAlive());
         snakeAIS.removeIf(snakeAI -> !snakeAI.getSelfSnake().isAlive());
 
