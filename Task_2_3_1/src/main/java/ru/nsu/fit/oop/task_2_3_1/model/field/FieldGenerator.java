@@ -6,8 +6,6 @@ import ru.nsu.fit.oop.task_2_3_1.model.Position;
 import ru.nsu.fit.oop.task_2_3_1.model.Tile;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.util.Random;
 import java.util.Scanner;
 import java.util.logging.Logger;
 

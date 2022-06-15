@@ -47,7 +47,10 @@ public class SnakePart extends Collidable {
                 snake.die();
             }
         } else if (isTail) {
-            this.snake.die();
+            snake.addGrowingMoves(1);
+            this.snake.getSnakeBody().remove(this);
+            this.snake.setSnakeSize(this.snake.getSnakeSize() - 1);
+            tile.setCollidable(null);
         } else {
             snake.die();
         }

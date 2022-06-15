@@ -83,6 +83,10 @@ public class Snake {
         return snakeSize;
     }
 
+    public void setSnakeSize(int snakeSize) {
+        this.snakeSize = snakeSize;
+    }
+
     public int getGrowingMoves() {
         return growingMoves;
     }
